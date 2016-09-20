@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="board1">
+	
+	<select id="selectBoard1List" resultType="com.board.test.BoardVO" >
+        SELECT BRDNO, BRDTITLE, BRDWRITER, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE
+          FROM TBL_BOARD
+         ORDER BY BRDNO DESC 
+    </select> 
+	
+	<insert id="insertBoard1" parameterType="com.board.test.BoardVO" >
+        INSERT INTO TBL_BOARD(BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE)
+        VALUES (#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW() )
+	</insert>
+	
+	<update id="updateBoard1" parameterType="com.board.test.BoardVO">
+        UPDATE TBL_BOARD
+           SET BRDTITLE=#{brdTitle}
+             , BRDWRITER=#{brdWriter}
+             , BRDMEMO=#{brdMemo}
+         WHERE BRDNO=#{brdNo}
+    </update> 
+		
+    <select id="selectBoard1One" parameterType="String" resultType="com.board.test.BoardVO">
+        SELECT BRDNO, BRDTITLE, BRDWRITER, BRDMEMO, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE
+          FROM TBL_BOARD
+         WHERE BRDNO=#{brdNo}
+    </select> 
+	
+	<delete id="deleteBoard1One" parameterType="String">
+        DELETE 
+          FROM TBL_BOARD
+         WHERE BRDNO=#{brdno}
+    </delete> 
+	
+</mapper>

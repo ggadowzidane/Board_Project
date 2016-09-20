@@ -17,7 +17,7 @@
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="prefix" value="/WEB-INF/jsp/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
@@ -29,13 +29,14 @@
 		<beans:property name="username" value="root"/>
 		<beans:property name="password" value="root"/>  -->		
 		
-		<beans:property name="url" value="jdbc:mariadb://board.cqfcdskkstoa.ap-northeast-2.rds.amazonaws.com:3307"/>
+		<beans:property name="url" value="jdbc:mariadb://board.cqfcdskkstoa.ap-northeast-2.rds.amazonaws.com:3307/board"/>
 		<beans:property name="username" value="ggadow"/>
 		<beans:property name="password" value="eoqkfdl1"/>
 	</beans:bean>
 	
 	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="mapperLocations" value="classpath:/sql/*.xml" />
 		<!-- <beans:property name="mapperLocations" ref="classath:mybatisMapper/Article.xml" />  -->
 	</beans:bean>
 	

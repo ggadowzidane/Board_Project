@@ -31,7 +31,7 @@
 	<delete id="deleteBoard1One" parameterType="String">
         DELETE 
           FROM TBL_BOARD
-         WHERE BRDNO=#{brdno}
+         WHERE BRDNO=#{brdNo}
     </delete> 
 	
 </mapper>

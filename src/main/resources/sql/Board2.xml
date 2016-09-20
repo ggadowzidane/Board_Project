@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="board2">
+	
+	<select id="selectBoard2List" resultType="com.board.test2.BoardVO" >
+        SELECT BRDNO, BRDTITLE, BRDWRITER, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE , BRDHIT
+          FROM TBL_BOARD2
+         WHERE BRDDELETEFLAG = 'N'
+         ORDER BY BRDNO DESC 
+    </select> 
+	
+	<insert id="insertBoard2" parameterType="com.board.test2.BoardVO" >
+        INSERT INTO TBL_BOARD2(BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG)
+        VALUES (#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW(),0,'N')
+	</insert>
+	
+	<update id="updateBoard2" parameterType="com.board.test2.BoardVO">
+        UPDATE TBL_BOARD2
+           SET BRDTITLE=#{brdTitle}
+             , BRDWRITER=#{brdWriter}
+             , BRDMEMO=#{brdMemo}
+         WHERE BRDNO=#{brdNo}
+           AND BRDDELETEFLAG = 'N'
+    </update> 
+		
+    <select id="selectBoard2One" parameterType="String" resultType="com.board.test2.BoardVO">
+        SELECT BRDNO, BRDTITLE, BRDWRITER, BRDMEMO, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE
+          FROM TBL_BOARD2
+         WHERE BRDNO=#{brdNo}
+           AND BRDDELETEFLAG = 'N'
+    </select>
+    
+    <update id="updateBoard2Read" parameterType="String">
+    	UPDATE TBL_BOARD2
+    	   SET BRDHIT = BRDHIT + 1
+    	 WHERE BRDNO = #{brdNo}
+    </update> 
+	
+	<delete id="deleteBoard2One" parameterType="String">
+        UPDATE TBL_BOARD2 
+           SET BRDDELETEFLAG = 'Y'
+         WHERE BRDNO=#{brdNo}
+    </delete> 
+	
+</mapper>

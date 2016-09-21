@@ -3,12 +3,19 @@
 
 <mapper namespace="board2">
 	
-	<select id="selectBoard2List" resultType="com.board.test2.BoardVO" >
+	<select id="selectBoard2List" resultType="com.board.test2.BoardVO" parameterType="com.board.test.common.PageVO">
         SELECT BRDNO, BRDTITLE, BRDWRITER, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE , BRDHIT
           FROM TBL_BOARD2
          WHERE BRDDELETEFLAG = 'N'
-         ORDER BY BRDNO DESC 
+         ORDER BY BRDNO DESC
+         LIMIT ${rowStart-1}, 10 
     </select> 
+    
+	<select id="selectBoard2Count" resultType="Integer" >
+	    SELECT COUNT(*)
+	      FROM TBL_BOARD2
+	     WHERE BRDDELETEFLAG='N'
+	</select> 
 	
 	<insert id="insertBoard2" parameterType="com.board.test2.BoardVO" >
         INSERT INTO TBL_BOARD2(BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG)

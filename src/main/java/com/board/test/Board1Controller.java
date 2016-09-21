@@ -22,7 +22,7 @@ public class Board1Controller {
 	@RequestMapping(value = "/board1List")
    	public String boardList(ModelMap modelMap) throws Exception {
     	List<?> listview   = board1Service.selectBoardList();
-
+    	System.out.println(2%10);
     	modelMap.addAttribute("listview", listview);
         return "Board1/BoardList";
     }

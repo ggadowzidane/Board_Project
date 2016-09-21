@@ -16,6 +16,7 @@
 			<col width='*%' />
 			<col width='15%' />
 			<col width='15%' />
+			<col width='10%' />
 		</colgroup>
 		<thead>
 			<tr>
@@ -35,14 +36,31 @@
 				<tr>
 					<td><c:out value="${listview.brdNo}"/></td>
 					<td><a href="${link}"><c:out value="${listview.brdTitle}"/></a></td>
-					<td><c:out value="${listview.brdWriter}"/></td>
-					<td>c:out value="${listview.brdDate}"/></td>
-					<td>c:out value="${listview.brdHit}"/></td>
+					<td><c:out value="${listview.brdWriter}" /></td>
+					<td><c:out value="${listview.brdDate}" /></td>
+					<td><c:out value="${listview.brdHit}" /></td>
 				</tr>
 			</c:forEach>
 		</tbody>
-		
 	</table>
+	<c:if test="${pageVo.totPage>1}">
+		<div class="paging">
+			<c:forEach var="i" begin="${pageVo.pageStart}" end="${pageVo.pageEnd}" step="1">
+				<c:url var="pageLink" value="board2List">
+					<c:param name="page" value="${i}" />
+				</c:url>						
+	            <c:choose>
+	                <c:when test="${i eq pageVo.page}">
+	                	<c:out value="${i}"/>
+	                </c:when>
+	                <c:otherwise>
+	                	<a href="${pageLink}"><c:out value="${i}"/></a>
+	                </c:otherwise>
+	            </c:choose>
+	        </c:forEach>
+		</div>
+		<br/>
+	</c:if>		
 	
 </body>
 </html>

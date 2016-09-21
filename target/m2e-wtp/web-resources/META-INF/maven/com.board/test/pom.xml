@@ -41,7 +41,7 @@
              <url>http://mesir.googlecode.com/svn/trunk/mavenrepo</url>
         </repository> 
     </repositories>
-	
+	 
 	<dependencies>
 		<!-- Spring -->
 		<dependency>
@@ -104,12 +104,13 @@
 		</dependency>
         
 		 <!-- Oracle -->
+		 <!-- 
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc14</artifactId>
             <version>10.2.0.4.0</version>
         </dependency>
-				
+         -->
 		<!-- AspectJ -->
 		<dependency>
             <groupId>org.aspectj</groupId>

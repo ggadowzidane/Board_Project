@@ -7,6 +7,38 @@ public class PageVO {
 	private int page,pageStart,pageEnd; //현재 페이지,시작페이지,종료페이지
 	
 	public PageVO(){}
+	
+	 /**
+     * 전체 데이터 개수(total)를 이용하여 페이지수 계산. 
+     */
+    public void pageCalculate(Integer total) {
+        getPage();
+        this.totRow  = total;
+        this.totPage    = (int) ( total / this.displayRowCount );
+        
+        if ( total % this.displayRowCount > 0 ) {
+        	this.totPage++;
+        }
+
+        this.pageStart = (this.page - (this.page - 1) % 10) ;
+        this.pageEnd = this.pageStart + 9;
+        if (this.pageEnd > this.totPage) {
+        	this.pageEnd = this.totPage;
+        }
+        
+        this.rowStart = ((this.page - 1) * this.displayRowCount) + 1 ;
+        this.rowEnd   = this.rowStart + this.displayRowCount - 1;
+    } 
+    
+
+    /**
+     * 현재 페이지 번호. 
+     */
+	public int getPage() {
+        if (this.page == 0) 
+            this.page = 1;
+        return page;
+    }
 
 	public int getDisplayRowCount() {
 		return displayRowCount;
@@ -46,10 +78,6 @@ public class PageVO {
 
 	public void setTotRow(int totRow) {
 		this.totRow = totRow;
-	}
-
-	public int getPage() {
-		return page;
 	}
 
 	public void setPage(int page) {

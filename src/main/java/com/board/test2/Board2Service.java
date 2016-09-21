@@ -18,6 +18,10 @@ public class Board2Service {
 		return sqlSession.selectList("selectBoard1List");
 	}
 	
+	public Integer selectBoardCount() throws Exception {
+		return sqlSession.selectOne("selectBoard2Count");
+    }
+	
 	public BoardVO selectBoardOne(String param) throws Exception {
 		return sqlSession.selectOne("selectBoard2One", param);
     }

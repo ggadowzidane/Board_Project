@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.board.test.common.PageVO;
+
 @Controller
 public class Board2Controller {
 
@@ -18,10 +20,13 @@ public class Board2Controller {
 	private Board2Service board2Service;
 	
 	@RequestMapping(value = "/board2List")
-   	public String boardList(ModelMap modelMap) throws Exception {
+   	public String boardList(PageVO pageVo,ModelMap modelMap) throws Exception {
+		
+		pageVo.pageCalculate( board2Service.selectBoardCount() ); // startRow, endRow
     	List<?> listview   = board2Service.selectBoardList();
-
+    	System.out.println(listview.get(0));
     	modelMap.addAttribute("listview", listview);
+    	modelMap.addAttribute("pageVo", pageVo);
         return "Board2/BoardList";
     }
 	/*

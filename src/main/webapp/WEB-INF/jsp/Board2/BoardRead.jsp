@@ -95,6 +95,10 @@
                     <td><c:out value="${boardInfo.brdTitle}"/></td> 
                 </tr>
                 <tr>
+					<td>내용</td> 
+					<td><c:out value="${boardInfo.brdmemo}" escapeXml="false"/></td> 
+				</tr>
+                <tr>
                     <td>첨부</td>
 						<td>
 							<c:forEach var="fileList" items="${fileList}" varStatus="status">

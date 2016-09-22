@@ -130,7 +130,14 @@
             <version>${org.aspectj-version}</version>
         </dependency>	
 		
+		
 		<!-- Logging -->
+		<!-- query log를 찍기위해서는 org.lazyluke 와   org.slf4j는 필수이다.-->
+		<dependency>
+		  <groupId>org.lazyluke</groupId>
+		  <artifactId>log4jdbc-remix</artifactId>
+		  <version>0.2.4</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

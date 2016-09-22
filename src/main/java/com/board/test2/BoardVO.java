@@ -1,9 +1,28 @@
 package com.board.test2;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 public class BoardVO {
-	private String brdNo,brdTitle,brdWriter,brdMemo,brdDate,brdHit,brdDeleteFlag;
+	private String brdNo,brdTitle,brdWriter,brdMemo,brdDate,brdHit,brdDeleteFlag,fileCnt;
+	private List<MultipartFile> uploadfile;
 
 	public BoardVO(){}
+	
+	public void setFileCnt(String fileCnt){
+		this.fileCnt = fileCnt;
+	}
+	public String getFileCnt(){
+		return this.fileCnt;
+	}
+	public void setUploadfile(List<MultipartFile> uploadfile){
+		this.uploadfile = uploadfile;
+	}
+	public List<MultipartFile> getUploadfile(){
+		return this.uploadfile;
+		
+	}
 	public String getBrdNo() {
 		return brdNo;
 	}

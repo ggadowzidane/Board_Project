@@ -3,23 +3,63 @@
 
 <mapper namespace="board2">
 	
-	<select id="selectBoard2List" resultType="com.board.test2.BoardVO" parameterType="com.board.test.common.PageVO">
-        SELECT BRDNO, BRDTITLE, BRDWRITER, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE , BRDHIT
-          FROM TBL_BOARD2
-         WHERE BRDDELETEFLAG = 'N'
+	<select id="selectBoard2List" resultType="com.board.test2.BoardVO" parameterType="com.board.test.common.SearchVO">
+        SELECT BRDNO
+              ,BRDTITLE
+              ,BRDWRITER
+              ,DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE 
+              ,BRDHIT
+        	  ,(SELECT COUNT(*)
+        	      FROM TBL_BOARDFILE
+        	     WHERE BRDNO = T.BRDNO   
+        	   ) FILECNT
+          FROM TBL_BOARD2 T
+    <include refid="includeBoard"/>
          ORDER BY BRDNO DESC
-         LIMIT ${rowStart-1}, 10 
+         LIMIT ${rowStart-1}, 10
     </select> 
     
-	<select id="selectBoard2Count" resultType="Integer" >
+    <select id="selectBoardFileList" resultType="com.board.test.common.FileVO" parameterType="String">
+    	SELECT FILENO
+    	      ,FILENAME
+    	      ,REALNAME
+    	      ,FILESIZE
+          FROM TBL_BOARDFILE
+         WHERE BRDNO=#{brdNo}
+         ORDER BY FILENO DESC 
+    </select>
+    
+	<select id="selectBoard2Count" resultType="Integer" parameterType="com.board.test.common.SearchVO">
 	    SELECT COUNT(*)
 	      FROM TBL_BOARD2
-	     WHERE BRDDELETEFLAG='N'
-	</select> 
+	    <include refid="includeBoard"/>
+	</select>
+	
+	<select id="selectBoardReplyList" resultType="com.board.test2.BoardReplyVO">
+		SELECT BRDNO
+			  ,RENO
+			  ,REWRITER
+			  ,REDELETEFLAG
+			  ,REMEMO
+			  ,REDATE 
+          FROM TBL_BOARDREPLY
+         WHERE BRDNO=#{brdNo} 
+           AND REDELETEFLAG='N'
+         ORDER BY RENO
+	</select>
 	
 	<insert id="insertBoard2" parameterType="com.board.test2.BoardVO" >
-        INSERT INTO TBL_BOARD2(BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG)
-        VALUES (#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW(),0,'N')
+		<selectKey resultType="String" keyProperty="brdNo" order="BEFORE">
+			SELECT IFNULL(MAX(BRDNO),0)+1
+			  FROM TBL_BOARD2
+		</selectKey>
+        INSERT INTO TBL_BOARD2(BRDNO,BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG)
+        VALUES (#{brdNo},#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW(),0,'N')
+	</insert>
+	
+	<insert id="insertBoard2File" parameterType="com.board.test.common.FileVO">
+		INSERT INTO TBL_BOARDFILE (BRDNO, FILENAME, REALNAME, FILESIZE)
+        VALUES (#{parentPK}, #{fileName}, #{realName}, #{fileSize})
 	</insert>
 	
 	<update id="updateBoard2" parameterType="com.board.test2.BoardVO">
@@ -32,7 +72,11 @@
     </update> 
 		
     <select id="selectBoard2One" parameterType="String" resultType="com.board.test2.BoardVO">
-        SELECT BRDNO, BRDTITLE, BRDWRITER, BRDMEMO, DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE
+        SELECT BRDNO
+              ,BRDTITLE
+              ,BRDWRITER
+              ,BRDMEMO
+              ,DATE_FORMAT(BRDDATE,'%Y-%m-%d') BRDDATE
           FROM TBL_BOARD2
          WHERE BRDNO=#{brdNo}
            AND BRDDELETEFLAG = 'N'
@@ -49,5 +93,50 @@
            SET BRDDELETEFLAG = 'Y'
          WHERE BRDNO=#{brdNo}
     </delete> 
+    
+    <delete id="deleteBoard2File" parameterType="HashMap">
+    	DELETE
+    	  FROM TBL_BOARDFILE
+    	 WHERE FILENO IN(
+    	 					<foreach item="item" index="index" collection="fileNo" separator=",">
+    	 						${item}
+    	 					</foreach>
+    	 				)
+    </delete>
+    
+    <delete id="deleteBoardReply" parameterType="String">
+    	UPDATE TBL_BOARDREPLY
+    	   SET REDELETEFLAG = 'Y'
+    	 WHERE RENO = #{reNo}
+    </delete>
+    
+    <insert id="insertBoardReply" parameterType="com.board.test2.BoardReplyVO">
+    	<selectKey resultType="String" keyProperty="reNo" order="BEFORE">
+    		SELECT IFNULL(MAX(RENO),0)+1
+    		  FROM TBL_BOARDREPLY
+    	</selectKey>
+    	INSERT INTO TBL_BOARDREPLY(BRDNO,RENO,REWRITER,REDELETEFLAG,REMEMO,REDATE)
+    				VALUES(#{brdNo},#{reNo},#{reWriter},'N',#{reMemo},NOW())
+    </insert>
+    
+    <update id="updateBoardReply" parameterType="com.board.test2.BoardReplyVO">
+    	UPDATE TBL_BOARDREPLY
+    	   SET REMEMO =#{reMemo}
+    	 WHERE RENO = #{reNo}
+    </update>
+    
+	
+	<sql id="includeBoard">
+		 WHERE BRDDELETEFLAG ='N'
+		<if test="searchKeyword != null and searchKeyword != '' ">
+			<foreach item="item" index="index" collection="searchTypeArr">
+				<choose>
+					<when test="index == 0">AND</when>
+					<otherwise>OR</otherwise>
+				</choose>
+				${item} LIKE CONCAT ('%',#{searchKeyword},'%')
+			</foreach>
+		</if>  
+	</sql>
 	
 </mapper>

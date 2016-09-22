@@ -25,7 +25,6 @@ public class PageVO {
         if (this.pageEnd > this.totPage) {
         	this.pageEnd = this.totPage;
         }
-        
         this.rowStart = ((this.page - 1) * this.displayRowCount) + 1 ;
         this.rowEnd   = this.rowStart + this.displayRowCount - 1;
     } 
@@ -35,7 +34,7 @@ public class PageVO {
      * 현재 페이지 번호. 
      */
 	public int getPage() {
-        if (this.page == 0) 
+        if (page == 0) 
             this.page = 1;
         return page;
     }

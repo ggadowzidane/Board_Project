@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<script type ="type/javascript" src="<c:url value="/js/jquery-1.11.2.min.js"/>"></script>
+	<script src="<c:url value="/js/jquery-1.11.2.min.js"/>"></script>
 	<script>
 		function fn_formSubmit(){
 			var form1 = document.form1;
@@ -42,7 +42,7 @@
 				<tbody>
 					<tr>
 						<td>작성자</td> 
-						<td><input type="text" name="brdWriter" size="20" maxlength="20" value="<c:out value="${boardInfo.brdWriter}"/>"></td> 
+						<td><input type="text" id ="brdWriter1" name="brdWriter" size="20" maxlength="20" value="<c:out value="${boardInfo.brdWriter}"/>"></td> 
 					</tr>
 					<tr>
 						<td>제목</td> 

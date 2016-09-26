@@ -65,18 +65,33 @@ public class Board2Service {
 	}
 	
 	public void insertBoardReply(BoardReplyVO param) throws Exception{
-		System.out.println(param.getReNo());
 		if(param.getReNo() == null || "".equals(param.getReNo())){
+			if(param.getReParent() != null){
+				BoardReplyVO replyInfo = sqlSession.selectOne("selectBoardReplyParent",param.getReParent());
+				param.setReDepth(replyInfo.getReDepth());
+				param.setReOrder(replyInfo.getReOrder() +1);
+				sqlSession.selectOne("updateBoardReplyOrder",replyInfo);
+			}else{
+				int reOrder = sqlSession.selectOne("selectBoardReplyMaxOrder",param.getBrdNo());
+				param.setReOrder(reOrder);
+			}
+			
 			sqlSession.insert("insertBoardReply",param);
 		}else{
-			System.out.println("여기가 되야지");
 			sqlSession.insert("updateBoardReply",param);
 		}
 	}
 	public void deleteBoardOne(String param) throws Exception {
 		sqlSession.delete("deleteBoard2One", param);
     }
-	public void deleteBoardReply(String param) throws Exception{
+	public boolean deleteBoardReply(String param) throws Exception{
+		int cnt = sqlSession.selectOne("selectBoardReplyChild",param);
+		if(cnt>0){
+			return false;
+		}
+		sqlSession.update("updateBoardReplyOrderDelete",param);
 		sqlSession.delete("deleteBoardReply",param);
+		
+		return true;
 	}
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -75,7 +76,7 @@ public class Board2Controller {
 		BoardVO boardInfo = board2Service.selectBoardOne(brdNo);
 		List<?> fielList  = board2Service.selectBoardFileList(brdNo);
 		List<?> replyList = board2Service.selectBoardReplyList(brdNo);
-		
+
 		modelMap.addAttribute("boardInfo",boardInfo);
 		modelMap.addAttribute("fileList", fielList);
 		modelMap.addAttribute("replyList",replyList);
@@ -89,12 +90,27 @@ public class Board2Controller {
 		return "redirect:/board2Read?brdNo="+boardReplyInfo.getBrdNo();
 	}
 	
-	@RequestMapping(value="/boardReplyDelete")
-	public String boardReplyDelete(HttpServletRequest request,BoardReplyVO boardReplyInfo) throws Exception{
-		board2Service.deleteBoardReply(boardReplyInfo.getReNo());
-		return "redirect:/board2Read?brdNo="+boardReplyInfo.getBrdNo();
+	@RequestMapping(value="/boardReplySaveAjax")
+	public void boardReplySasveAjax(HttpServletResponse response, BoardReplyVO boardReplyInfo) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json;charset=UTF-8");
+		
+		board2Service.insertBoardReply(boardReplyInfo);
+		try{
+			response.getWriter().print(mapper.writeValueAsString(boardReplyInfo.getReNo()));
+		} catch (Exception e){
+			System.out.println("오류로 인해 댓글 저장에 문제가 발생하였습니다");
+		}
 	}
 	
+	@RequestMapping(value="/boardReplySaveAjaxReply")
+	public String boardReplySaveAjaxReply(BoardReplyVO boardReplyInfo, ModelMap modelMap) throws Exception{
+		
+		board2Service.insertBoardReply(boardReplyInfo);
+		
+		modelMap.addAttribute("replyInfo",boardReplyInfo);
+		return "Board2/BoardReadAjaxReply";
+	}
 	
 	
 	@RequestMapping(value = "/board2Delete")
@@ -105,7 +121,32 @@ public class Board2Controller {
     	board2Service.deleteBoardOne(brdNo);
         
         return "redirect:/board2List";
-    }
+    }  
+	
+	@RequestMapping(value="/boardReplyDelete")
+	public String boardReplyDelete(HttpServletRequest request,BoardReplyVO boardReplyInfo) throws Exception{
+		  if (!board2Service.deleteBoardReply(boardReplyInfo.getReNo()) ) {
+	            return "Board2/BoardFaiure";
+	        }
+
+	        return "redirect:/board2Read?brdNo=" + boardReplyInfo.getBrdNo();
+	}
+	
+	@RequestMapping(value="/boardReplyDeleteAjax")
+	public void boardReplyDeleteAjax(HttpServletResponse response , BoardReplyVO boardReplyInfo) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json;charset=UTF-8");
+		
+		try{
+			if(!board2Service.deleteBoardReply(boardReplyInfo.getReNo())){
+				response.getWriter().print(mapper.writeValueAsString("Fail"));
+			}else{
+				response.getWriter().print(mapper.writeValueAsString("OK"));
+			}
+		} catch(Exception e){
+			System.out.println("오류:댓글 삭제에 문제가 발생하였습니다");
+		}
+	}
 	
 	@RequestMapping(value="/fileDownload")
 	public void boardFileDownload(HttpServletRequest request,HttpServletResponse response){

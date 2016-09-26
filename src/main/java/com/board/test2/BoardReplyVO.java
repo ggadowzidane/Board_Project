@@ -2,8 +2,34 @@ package com.board.test2;
 
 public class BoardReplyVO {
 	private String brdNo,reNo,reWriter,reDeleteflag,reMemo,reDate;
+	private String reParent,reDepth;
+	private int reOrder;
 	
 	public BoardReplyVO(){}
+
+	public String getReParent() {
+		return reParent;
+	}
+
+	public void setReParent(String reParent) {
+		this.reParent = reParent;
+	}
+
+	public String getReDepth() {
+		return reDepth;
+	}
+
+	public void setReDepth(String reDepth) {
+		this.reDepth = reDepth;
+	}
+	
+	public int getReOrder() {
+		return reOrder;
+	}
+	
+	public void setReOrder(int reOrder) {
+		this.reOrder = reOrder;
+	}
 
 	public String getBrdNo() {
 		return brdNo;
@@ -51,6 +77,15 @@ public class BoardReplyVO {
 
 	public void setReDate(String reDate) {
 		this.reDate = reDate;
+	}
+
+	@Override
+	public String toString() {
+		return "BoardReplyVO [brdNo=" + brdNo + ", reNo=" + reNo
+				+ ", reWriter=" + reWriter + ", reDeleteflag=" + reDeleteflag
+				+ ", reMemo=" + reMemo + ", reDate=" + reDate + ", reParent="
+				+ reParent + ", reDepth=" + reDepth + ", reOrder=" + reOrder
+				+ "]";
 	}
 	
 	

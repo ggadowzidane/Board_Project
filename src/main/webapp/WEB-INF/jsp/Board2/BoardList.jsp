@@ -26,9 +26,13 @@
 </script>
 </head>
 <body>
-	<a href="board2Form">글쓰기</a>
+	<h1><c:out value="${bgInfo.bgName}"/></h1>				
+	<c:if test="${bgInfo.bgReadOnly=='N'}">
+		<a href="board2Form?bgno=<c:out value="${searchVO.bgNo}"/>">글쓰기</a>
+	</c:if>
 	<table border="1" style="width:600px">
 		<caption>게시판</caption>
+		
 		<colgroup>
 			<col width='8%' />
 			<col width='*%' />

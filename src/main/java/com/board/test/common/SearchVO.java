@@ -4,9 +4,18 @@ public class SearchVO extends PageVO {
 	
 	private String searchKeyword="";	//검색 키워드
 	private String searchType ="";		//검색 필드 : 제목,내용
+	private String bgNo;
 	//private String[] searchTypeArr;		//검색 필드를 배열로 변환
 	
 	public SearchVO(){}
+	
+	public String getBgNo() {
+		return bgNo;
+	}
+
+	public void setBgNo(String bgNo) {
+		this.bgNo = bgNo;
+	}
 	
 	public String getSearchKeyword() {
 		return searchKeyword;

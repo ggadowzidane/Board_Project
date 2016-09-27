@@ -29,15 +29,26 @@ public class Board2Controller {
 
 	@Autowired
 	private Board2Service board2Service;
+	@Autowired
+	private BoardGroupService boardGroupService;
 	
 	@RequestMapping(value = "/board2List")
    	public String boardList(SearchVO searchVO,ModelMap modelMap) throws Exception {
 		
+		if(searchVO.getBgNo() == null){
+			searchVO.setBgNo("2");
+		}
+		BoardGroupVO bgInfo = boardGroupService.selectBoardGroupOne4Used(searchVO.getBgNo());
+		if (bgInfo == null) {
+            return "Board2/BoardGroupFail";
+        }
 		searchVO.pageCalculate( board2Service.selectBoardCount(searchVO) );
     	List<?> listview   = board2Service.selectBoardList(searchVO);
     	
     	modelMap.addAttribute("listview", listview);
     	modelMap.addAttribute("searchVO", searchVO);
+    	modelMap.addAttribute("bgInfo", bgInfo);
+    	
         return "Board2/BoardList";
     }
 	/*
@@ -47,13 +58,21 @@ public class Board2Controller {
 	public String boardForm(HttpServletRequest request,ModelMap modelMap) throws Exception {
 		
 		String brdNo = request.getParameter("brdNo");
+		String bgNo = request.getParameter("bgNo");
 		if(brdNo !=null){
 			BoardVO boardInfo = board2Service.selectBoardOne(brdNo);
 			List<?> fileList =board2Service.selectBoardFileList(brdNo);
 			
 			modelMap.addAttribute("boardInfo",boardInfo);
 			modelMap.addAttribute("fileList",fileList);
+			bgNo = boardInfo.getBgNo();
 		}
+		BoardGroupVO bgInfo = boardGroupService.selectBoardGroupOne4Used(bgNo);
+		if (bgInfo == null) {
+            return "Board2/BoardGroupFail";
+        }
+		modelMap.addAttribute("bgNo",bgNo);
+		modelMap.addAttribute("bgInfo", bgInfo);
 		
         return "Board2/BoardForm";
 	}
@@ -64,7 +83,8 @@ public class Board2Controller {
 		FileUtil file = new FileUtil();
 		List<FileVO> fileList = file.saveAllFiles(boardInfo.getUploadfile());
 		board2Service.insertBoard(boardInfo,fileList,fileNo);
-	    return "redirect:/board2List";
+		System.out.println(boardInfo.getBgNo());
+	    return "redirect:/board2List?bgNo="+boardInfo.getBgNo();
 	}
 	
 	@RequestMapping(value = "/board2Read")
@@ -76,10 +96,16 @@ public class Board2Controller {
 		BoardVO boardInfo = board2Service.selectBoardOne(brdNo);
 		List<?> fielList  = board2Service.selectBoardFileList(brdNo);
 		List<?> replyList = board2Service.selectBoardReplyList(brdNo);
-
+		
+		BoardGroupVO bgInfo = boardGroupService.selectBoardGroupOne4Used(boardInfo.getBgNo());
+		if (bgInfo == null) {
+            return "Board2/BoardGroupFail";
+        }
+		
 		modelMap.addAttribute("boardInfo",boardInfo);
 		modelMap.addAttribute("fileList", fielList);
 		modelMap.addAttribute("replyList",replyList);
+		modelMap.addAttribute("bgInfo", bgInfo);
 		
 	    return "Board2/BoardRead";
 	}
@@ -117,10 +143,11 @@ public class Board2Controller {
    	public String boardDelete(HttpServletRequest request) throws Exception {
     	
     	String brdNo = request.getParameter("brdNo");
+    	String bgNo = request.getParameter("bgNo");
     	
     	board2Service.deleteBoardOne(brdNo);
         
-        return "redirect:/board2List";
+        return "redirect:/board2List?bgNo="+bgNo;
     }  
 	
 	@RequestMapping(value="/boardReplyDelete")

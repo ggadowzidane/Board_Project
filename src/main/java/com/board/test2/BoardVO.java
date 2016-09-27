@@ -6,10 +6,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class BoardVO {
 	private String brdNo,brdTitle,brdWriter,brdMemo,brdDate,brdHit,brdDeleteFlag,fileCnt;
+	private String bgNo;
 	private List<MultipartFile> uploadfile;
 
 	public BoardVO(){}
 	
+	public String getBgNo() {
+		return bgNo;
+	}
+	
+	public void setBgNo(String bgNo) {
+		this.bgNo = bgNo;
+	}
+
 	public void setFileCnt(String fileCnt){
 		this.fileCnt = fileCnt;
 	}

@@ -178,9 +178,9 @@
                 </tr>
             </tbody>
         </table>    
-        <a href="#" onclick="history.back(-1)">돌아가기</a>
-        <a href="board2Delete?brdNo=<c:out value="${boardInfo.brdNo}"/>">삭제</a>
-        <a href="board2Form?brdNo=<c:out value="${boardInfo.brdNo}"/>">수정</a>
+        <a href="board2List?bgNo=<c:out value="${boardInfo.bgNo}"/>">돌아가기</a>
+        <a href="board2Delete?brdNo=<c:out value="${boardInfo.brdNo}"/>&bgNo=<c:out value="${boardInfo.bgNo}"/>">삭제</a>
+        <a href="board2Form?brdNo=<c:out value="${boardInfo.brdNo}"/>&bgNo=<c:out value="${boardInfo.bgNo}"/>">수정</a>
         
         <p> &nbsp; </p>
         

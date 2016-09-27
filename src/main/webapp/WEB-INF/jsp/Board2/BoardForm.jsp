@@ -64,7 +64,8 @@
 					</tr>
 				</tbody>
 			</table>    
-			<input type="hidden" name="brdNo" value="<c:out value="${boardInfo.brdNo}"/>"> 
+			<input type="hidden" name="brdNo" value="<c:out value="${boardInfo.brdNo}"/>">
+			<input type="hidden" id="bgNo" name="bgNo" value="<c:out value="${bgNo}"/>">
 			<a href="#" onclick="fn_formSubmit()">저장</a>
 		</form>	
 	</body>

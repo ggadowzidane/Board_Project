@@ -24,7 +24,8 @@
     </select> 
     
     <select id="selectBoard2One" parameterType="String" resultType="com.board.test2.BoardVO">
-        SELECT BRDNO
+        SELECT BGNO
+              ,BRDNO
               ,BRDTITLE
               ,BRDWRITER
               ,BRDMEMO
@@ -87,6 +88,19 @@
 		  FROM TBL_BOARDREPLY
 		 WHERE BRDNO = #{brdNo}
 	</select>
+	
+	<select id="selectBoardGroupOne4Used" parameterType="String" resultType="com.board.test2.BoardGroupVO">
+        SELECT BGNO
+              ,BGNAME
+              ,BGUSED
+              ,BGREPLY
+              ,BGREADONLY
+          FROM TBL_BOARDGROUP
+         WHERE BGDELETEFLAG='N' 
+           AND BGNO=#{bgNo} 
+           AND BGUSED='Y'
+    </select>
+	
 	<update id="updateBoardReplyOrder" parameterType="com.board.test2.BoardReplyVO">
 		UPDATE TBL_BOARDREPLY
 		   SET REORDER = REORDER + 1
@@ -98,8 +112,8 @@
 			SELECT IFNULL(MAX(BRDNO),0)+1
 			  FROM TBL_BOARD2
 		</selectKey>
-        INSERT INTO TBL_BOARD2(BRDNO,BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG)
-        VALUES (#{brdNo},#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW(),0,'N')
+        INSERT INTO TBL_BOARD2(BRDNO,BRDTITLE, BRDWRITER, BRDMEMO, BRDDATE, BRDHIT, BRDDELETEFLAG,BGNO)
+        VALUES (#{brdNo},#{brdTitle}, #{brdWriter}, #{brdMemo}, NOW(),0,'N',#{bgNo})
 	</insert>
 	
 	<insert id="insertBoard2File" parameterType="com.board.test.common.FileVO">
@@ -175,13 +189,10 @@
     
 	
 	<sql id="includeBoard">
-		 WHERE BRDDELETEFLAG ='N'
+		 WHERE BGNO = #{bgNo}
+		   AND BRDDELETEFLAG ='N'
 		<if test="searchKeyword != null and searchKeyword != '' ">
-			<foreach item="item" index="index" collection="searchTypeArr">
-				<choose>
-					<when test="index == 0">AND</when>
-					<otherwise>OR</otherwise>
-				</choose>
+			<foreach item="item" index="index" collection="searchTypeArr" separator=" OR " open="AND (" close=")">
 				${item} LIKE CONCAT ('%',#{searchKeyword},'%')
 			</foreach>
 		</if>  

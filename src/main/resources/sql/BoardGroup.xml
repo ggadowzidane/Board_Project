@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="BoardGroup">
+	<select id="selectBoardGroupList" resultType="com.board.test.common.TreeVO">
+		SELECT BGNO 'KEY'
+		      ,BGNAME TITLE
+		      ,BGPARENT PARENT
+          FROM TBL_BOARDGROUP
+     	 WHERE BGDELETEFLAG='N' 
+     	 ORDER BY BGNO 
+	</select>
+	
+	<select id="selectBoardGroupOne" parameterType="String" resultType="com.board.test2.BoardGroupVO">
+        SELECT BGNO
+              ,BGNAME
+              ,BGUSED
+              ,BGREPLY
+              ,BGREADONLY
+          FROM TBL_BOARDGROUP
+         WHERE BGDELETEFLAG='N' AND BGNO=#{bgNo} 
+	</select>
+	
+	<insert id="insertBoardGroup" parameterType="com.board.test2.BoardGroupVO" >
+	    <selectKey resultType="String" keyProperty="bgNo" order="BEFORE">
+	        SELECT IFNULL(MAX(BGNO),0)+1 FROM TBL_BOARDGROUP
+	    </selectKey>    
+	    INSERT INTO TBL_BOARDGROUP(BGNO, BGNAME, BGUSED, BGREPLY, BGREADONLY, BGPARENT, BGDELETEFLAG, BGDATE)
+	    VALUES (#{bgNo}, #{bgName}, #{bgUsed}, #{bgReply}, #{bgReadOnly}, #{bgParent}, 'N', NOW() )
+	</insert>
+
+
+	<update id="updateBoardGroup" parameterType="com.board.test2.BoardGroupVO">
+	    UPDATE TBL_BOARDGROUP
+	       SET BGNAME=#{bgName}, BGUSED=#{bgUsed}, BGREPLY=#{bgReply}, BGREADONLY=#{bgReadOnly}
+	     WHERE BGNO=#{bgNo}
+	</update>  
+</mapper>
